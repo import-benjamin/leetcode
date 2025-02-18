@@ -1,3 +1,5 @@
+// Runtime: 0ms, 2.4MB
+
 impl Solution {
     pub fn add_two_numbers(l1: Option<Box<ListNode>>, l2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
         let (mut p1, mut p2) = (l1.as_deref(), l2.as_deref()); // Pointers to traverse the linked lists
