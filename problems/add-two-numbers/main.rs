@@ -1,13 +1,3 @@
-fn decompose(mut num: i32) -> Vec<i32> {
-    let mut digits = Vec::new(); // Stores digits of the number
-    while num > 0 {
-        digits.push(num % 10); // Extract the last digit
-        num /= 10; // Remove the last digit
-    }
-    if digits.is_empty() { digits.push(0); } // Ensure at least one digit
-    digits
-}
-
 impl Solution {
     pub fn add_two_numbers(l1: Option<Box<ListNode>>, l2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
         let (mut p1, mut p2) = (l1.as_deref(), l2.as_deref()); // Pointers to traverse the linked lists
