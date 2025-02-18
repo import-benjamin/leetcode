@@ -1,25 +1,3 @@
-
-pub struct ListNodeIter<'a> {
-    current: Option<&'a ListNode>, // Keeps track of the current node during iteration
-}
-
-impl ListNode {
-    pub fn iter(&self) -> ListNodeIter {
-        ListNodeIter { current: Some(self) } // Initializes an iterator starting at this node
-    }
-}
-
-impl<'a> Iterator for ListNodeIter<'a> {
-    type Item = i32;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        self.current.map(|node| {
-            self.current = node.next.as_deref(); // Move to the next node
-            node.val // Return the current node's value
-        })
-    }
-}
-
 fn decompose(mut num: i32) -> Vec<i32> {
     let mut digits = Vec::new(); // Stores digits of the number
     while num > 0 {
