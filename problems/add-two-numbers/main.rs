@@ -1,40 +1,51 @@
-fn extract_number(n: Option<Box<ListNode>>) -> i128 {
-    match n {
-        Some(boxed_listnode) => {
-            match boxed_listnode.next {
-                Some(next_boxed_listnode) => i128::from(boxed_listnode.val) + extract_number(Some(next_boxed_listnode)) * 10,
-                None => i128::from(boxed_listnode.val)
-            }
-        }
-        None => 0
+
+pub struct ListNodeIter<'a> {
+    current: Option<&'a ListNode>, // Keeps track of the current node during iteration
+}
+
+impl ListNode {
+    pub fn iter(&self) -> ListNodeIter {
+        ListNodeIter { current: Some(self) } // Initializes an iterator starting at this node
     }
 }
 
-fn decompose(mut num: i128) -> Vec<u8> {
-    if num == 0 {
-        return vec![0];
+impl<'a> Iterator for ListNodeIter<'a> {
+    type Item = i32;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.current.map(|node| {
+            self.current = node.next.as_deref(); // Move to the next node
+            node.val // Return the current node's value
+        })
     }
-    let mut digits = Vec::new();
+}
+
+fn decompose(mut num: i32) -> Vec<i32> {
+    let mut digits = Vec::new(); // Stores digits of the number
     while num > 0 {
-        digits.push((num % 10) as u8);
-        num /= 10;
+        digits.push(num % 10); // Extract the last digit
+        num /= 10; // Remove the last digit
     }
+    if digits.is_empty() { digits.push(0); } // Ensure at least one digit
     digits
-}
-
-fn extract_listnode(n: i128) -> Option<Box<ListNode>> {
-    let mut r = decompose(n);
-    let t = ListNode::new(r.pop().unwrap() as i32);
-    r.reverse();
-    let f = r.iter().fold(t, |s, x| ListNode {val: i32::from(*x), next: Some(Box::new(s))});
-    Some(Box::new(f))
 }
 
 impl Solution {
     pub fn add_two_numbers(l1: Option<Box<ListNode>>, l2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
-        let n1 = extract_number(l1);
-        let n2 = extract_number(l2);
-        println!("{:?} + {:?} = {:?}", n1, n2, n1+n2);
-        extract_listnode(n1 + n2)
+        let (mut p1, mut p2) = (l1.as_deref(), l2.as_deref()); // Pointers to traverse the linked lists
+        let mut dummy = ListNode { val: 0, next: None }; // Dummy node to simplify list construction
+        let mut tail = &mut dummy; // Pointer to the last node in the result list
+        let mut carry = 0; // Stores carry-over value
+
+        while p1.is_some() || p2.is_some() || carry > 0 {
+            let sum = p1.map_or(0, |n| n.val) + p2.map_or(0, |n| n.val) + carry; // Compute sum
+            carry = sum / 10; // Determine new carry value
+            tail.next = Some(Box::new(ListNode { val: sum % 10, next: None })); // Store digit in new node
+            tail = tail.next.as_mut().unwrap(); // Move tail forward
+            p1 = p1.and_then(|n| n.next.as_deref()); // Advance pointer in first list
+            p2 = p2.and_then(|n| n.next.as_deref()); // Advance pointer in second list
+        }
+
+        dummy.next // Return the sum list, skipping dummy node
     }
 }
