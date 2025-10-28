@@ -1,0 +1,10 @@
+[package]
+name = "first-missing-positive"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+leetcode-common = { path = "../../leetcode-common"}
+
+[lints]
+workspace = true
