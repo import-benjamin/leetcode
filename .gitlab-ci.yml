@@ -1,0 +1,17 @@
+workflow:
+  name: 'Evaluate unit-tests'
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        paths:
+          - problems/**/*
+        compare_to: 'refs/heads/main'
+
+stages:
+  - build
+
+rust-latest:
+  stage: build
+  image: rust:latest
+  script:
+    - cargo test --verbose
