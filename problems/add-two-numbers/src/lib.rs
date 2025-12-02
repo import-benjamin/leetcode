@@ -18,6 +18,5 @@ pub fn add_two_numbers(l1: Option<Box<ListNode>>, l2: Option<Box<ListNode>>) -> 
         p1 = p1.and_then(|n| n.next.as_deref()); // Advance pointer in first list
         p2 = p2.and_then(|n| n.next.as_deref()); // Advance pointer in second list
     }
-
     dummy.next // Return the sum list, skipping dummy node
 }
